@@ -72,8 +72,8 @@ public class RuleController {
      * */
     @Operation(summary = "내용 검색", description = "IP 추가 시 작성하는 내용을 기준으로 검색합니다.")
     @GetMapping("/search")
-    public ResponseEntity<?> searchRules() {
-        return null;
+    public ResponseEntity<?> searchRules(@RequestParam String content) {
+        return ResponseEntity.ok(ruleService.searchRules(content));
     }
 
     /**

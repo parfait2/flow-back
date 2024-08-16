@@ -67,8 +67,15 @@ public class RuleService {
         return new RuleListDto(ruleDtoList);
     }
 
-    public void searchRules() {
+    @Transactional(readOnly = true)
+    public RuleListDto searchRules(String content) {
+        List<Rule> ruleList = ruleRepository.searchByContent(content); // IP 주소 또는 설명에 해당하는 내용이 있으면 반환합니다.
 
+        List<RuleDto> ruleDtoList = ruleList.stream()
+                .map(RuleDto::fromEntity)
+                .collect(Collectors.toList());
+
+        return new RuleListDto(ruleDtoList);
     }
 
     public void deleteRule() {
