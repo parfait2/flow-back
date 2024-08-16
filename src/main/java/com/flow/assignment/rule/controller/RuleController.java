@@ -1,5 +1,6 @@
 package com.flow.assignment.rule.controller;
 
+import com.flow.assignment.rule.dto.request.PeriodDto;
 import com.flow.assignment.rule.dto.request.RequestRuleDto;
 import com.flow.assignment.rule.dto.response.IpDto;
 import com.flow.assignment.rule.service.RuleService;
@@ -98,9 +99,9 @@ public class RuleController {
      * @return
      * */
     @Operation(summary = "기간 검색", description = "사용 시작 시간, 사용 끝 시간으로 검색합니다.")
-    @GetMapping("/period")
-    public ResponseEntity<?> searchRulesByPeriod() {
-        return null;
+    @PostMapping("/period")
+    public ResponseEntity<?> searchRulesByPeriod(@RequestBody PeriodDto periodDto) {
+        return ResponseEntity.ok(ruleService.searchRulesByPeriod(periodDto));
     }
 
 }

@@ -2,6 +2,7 @@ package com.flow.assignment.rule.service;
 
 import com.flow.assignment.common.exception.CustomException;
 import com.flow.assignment.common.exception.ErrorCode;
+import com.flow.assignment.rule.dto.request.PeriodDto;
 import com.flow.assignment.rule.dto.request.RequestRuleDto;
 import com.flow.assignment.rule.dto.response.IpDto;
 import com.flow.assignment.rule.dto.response.RuleDto;
@@ -88,8 +89,14 @@ public class RuleService {
         ruleRepository.delete(rule); // SOFT DELETE
     }
 
-    public void searchRulesByPeriod() {
+    public RuleListDto searchRulesByPeriod(PeriodDto periodDto) {
+        List<Rule> ruleList = ruleRepository.findAllByStartTimeBetween(periodDto.getStartTime(), periodDto.getEndTime());
 
+        List<RuleDto> ruleDtoList = ruleList.stream()
+                .map(RuleDto::fromEntity)
+                .collect(Collectors.toList());
+
+        return new RuleListDto(ruleDtoList);
     }
 
 }
