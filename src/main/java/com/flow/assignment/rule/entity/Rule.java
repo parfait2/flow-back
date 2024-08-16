@@ -2,11 +2,14 @@ package com.flow.assignment.rule.entity;
 
 import com.flow.assignment.common.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.*;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,10 +19,14 @@ import java.util.UUID;
 @Getter
 @Table(name = "rule")
 @Entity
+@SQLDelete(sql = "UPDATE RULE SET IS_DELETED = TRUE WHERE ID = ?")
+@Where(clause = "is_deleted = false")
 public class Rule extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
     @NotNull

@@ -84,12 +84,10 @@ public class RuleController {
      * @return
      * */
     @Operation(summary = "IP 규칙 삭제", description = "삭제 클릭 시 해당 규칙을 삭제합니다.")
-    @GetMapping("/delete")
-    public ResponseEntity<?> deleteRule() {
-
-        // TODO Soft Delete 구현
-
-        return null;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRule(@PathVariable UUID id) {
+        ruleService.deleteRule(id);
+        return ResponseEntity.noContent().build();
     }
 
     /**

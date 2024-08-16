@@ -1,5 +1,7 @@
 package com.flow.assignment.rule.service;
 
+import com.flow.assignment.common.exception.CustomException;
+import com.flow.assignment.common.exception.ErrorCode;
 import com.flow.assignment.rule.dto.request.RequestRuleDto;
 import com.flow.assignment.rule.dto.response.IpDto;
 import com.flow.assignment.rule.dto.response.RuleDto;
@@ -78,8 +80,12 @@ public class RuleService {
         return new RuleListDto(ruleDtoList);
     }
 
-    public void deleteRule() {
+    @Transactional
+    public void deleteRule(UUID id) {
+        Rule rule = ruleRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_RULE));
 
+        ruleRepository.delete(rule); // SOFT DELETE
     }
 
     public void searchRulesByPeriod() {

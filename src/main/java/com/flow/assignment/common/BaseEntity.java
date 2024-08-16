@@ -24,7 +24,7 @@ public abstract class BaseEntity {
     private LocalDateTime modifiedTime;
 
     @Column(columnDefinition = "bit default false NULL COMMENT '이용가능여부'")
-    private Boolean isDeleted;
+    private Boolean isDeleted = false;
 
     public void setIsDeleted(boolean isDeleted) {
         this.isDeleted = isDeleted;
