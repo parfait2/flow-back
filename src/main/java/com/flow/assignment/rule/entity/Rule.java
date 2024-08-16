@@ -1,14 +1,14 @@
 package com.flow.assignment.rule.entity;
 
 import com.flow.assignment.common.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 public class Rule extends BaseEntity {
 
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     private String address; // IP 주소
 
@@ -27,5 +28,32 @@ public class Rule extends BaseEntity {
     private LocalDateTime startTime; // 사용 허용 시작 시간
 
     private LocalDateTime endTime; // 사용 허용 종료 시간
+
+    @Builder
+    public Rule(
+            String address,
+            String description,
+            LocalDateTime startTime,
+            LocalDateTime endTime
+    ) {
+        this.address = address;
+        this.description = description;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public static Rule of(
+            String address,
+            String description,
+            LocalDateTime startTime,
+            LocalDateTime endTime
+    ) {
+        return Rule.builder()
+                .address(address)
+                .description(description)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+    }
 
 }

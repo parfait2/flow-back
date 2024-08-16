@@ -1,22 +1,40 @@
 package com.flow.assignment.rule.controller;
 
 import com.flow.assignment.rule.dto.request.RequestRuleDto;
+import com.flow.assignment.rule.dto.response.IpDto;
 import com.flow.assignment.rule.service.RuleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.util.UUID;
+
 @RestController
-@RequestMapping("/api/rule")
+@RequestMapping("/api/rules")
 @Slf4j
 @RequiredArgsConstructor
 @Tag(name = "IP 규칙 API", description = "허용된 IP 접근 제한 설정 기능")
 public class RuleController {
 
     private final RuleService ruleService;
+
+    /**
+     * 현재 IP 불러오기
+     * : 사용자의 IP 주소를 반환합니다.
+     *
+     * @param
+     * @return
+     * */
+    @Operation(summary = "현재 IP 불러오기", description = "사용자의 IP 주소를 반환합니다.")
+    @GetMapping("/ip")
+    public ResponseEntity<IpDto> getUserIp() {
+        return ResponseEntity.ok(ruleService.getUserIp());
+    }
 
     /**
      * IP 규칙 등록
@@ -26,9 +44,10 @@ public class RuleController {
      * @return
      * */
     @Operation(summary = "IP 규칙 등록", description = "IP 주소, 설명, 사용 허용 시간을 등록합니다.")
-    @PutMapping("/save")
-    public ResponseEntity<?> saveRule(@RequestBody RequestRuleDto requestRuleDto) {
-        return null;
+    @PostMapping()
+    public ResponseEntity<Void> saveRule(@RequestBody @Valid RequestRuleDto requestRuleDto) {
+        UUID savedId = ruleService.save(requestRuleDto);
+        return ResponseEntity.created(URI.create("/api/rules/" + savedId)).build();
     }
 
     /**
@@ -41,6 +60,11 @@ public class RuleController {
     @Operation(summary = "규칙 전체 조회", description = "모든 등록된 규칙들이 리스트 형식으로 반환됩니다.")
     @GetMapping()
     public ResponseEntity<?> getAllRules() {
+
+        // TODO 리스트는 등록 시간 기준 내림차순으로 나열되어야 해요.
+
+
+
         return null;
     }
 
@@ -67,6 +91,9 @@ public class RuleController {
     @Operation(summary = "IP 규칙 삭제", description = "삭제 클릭 시 해당 규칙을 삭제합니다.")
     @GetMapping("/delete")
     public ResponseEntity<?> deleteRule() {
+
+        // TODO Soft Delete 구현
+
         return null;
     }
 
