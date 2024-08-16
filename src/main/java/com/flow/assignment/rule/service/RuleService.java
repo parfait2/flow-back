@@ -2,14 +2,19 @@ package com.flow.assignment.rule.service;
 
 import com.flow.assignment.rule.dto.request.RequestRuleDto;
 import com.flow.assignment.rule.dto.response.IpDto;
+import com.flow.assignment.rule.dto.response.RuleDto;
+import com.flow.assignment.rule.dto.response.RuleListDto;
 import com.flow.assignment.rule.entity.Rule;
 import com.flow.assignment.rule.repository.RuleRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -24,6 +29,8 @@ public class RuleService {
     }
 
     public IpDto getUserIp() {
+
+        // TODO
         String ip = request.getHeader("X-Forwarded-For");
 
         if (ip == null || ip.isEmpty()) {
@@ -47,8 +54,17 @@ public class RuleService {
         return savedRule.getId();
     }
 
-    public void getAllRules() {
+    @Transactional(readOnly = true)
+    public RuleListDto getAllRules() {
 
+        // 리스트는 등록 시간 기준 내림차순으로 나열됩니다.
+        List<Rule> rulesList = ruleRepository.findAll(Sort.by(Sort.Direction.DESC, "createdTime"));
+
+        List<RuleDto> ruleDtoList = rulesList.stream()
+                .map(RuleDto::fromEntity)
+                .collect(Collectors.toList());
+
+        return new RuleListDto(ruleDtoList);
     }
 
     public void searchRules() {

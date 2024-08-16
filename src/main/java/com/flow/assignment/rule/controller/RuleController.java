@@ -57,15 +57,10 @@ public class RuleController {
      * @param
      * @return
      * */
-    @Operation(summary = "규칙 전체 조회", description = "모든 등록된 규칙들이 리스트 형식으로 반환됩니다.")
+    @Operation(summary = "IP 규칙 전체 조회", description = "모든 등록된 규칙들이 리스트 형식으로 반환됩니다.")
     @GetMapping()
     public ResponseEntity<?> getAllRules() {
-
-        // TODO 리스트는 등록 시간 기준 내림차순으로 나열되어야 해요.
-
-
-
-        return null;
+        return ResponseEntity.ok(ruleService.getAllRules());
     }
 
     /**
