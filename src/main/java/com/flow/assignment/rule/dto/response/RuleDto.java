@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RuleDto {
 
+    private UUID id;
     private String ipAddress;
     private String description;
     private LocalDateTime startTime;
@@ -21,6 +23,7 @@ public class RuleDto {
 
     public static RuleDto fromEntity(Rule rule) {
         return RuleDto.builder()
+                .id(rule.getId())
                 .ipAddress(rule.getAddress())
                 .description(rule.getDescription())
                 .startTime(rule.getStartTime())
