@@ -6,18 +6,16 @@ import com.flow.assignment.rule.dto.request.PeriodDto;
 import com.flow.assignment.rule.dto.request.RequestRuleDto;
 import com.flow.assignment.rule.dto.response.IpDto;
 import com.flow.assignment.rule.dto.response.RuleDto;
-import com.flow.assignment.rule.dto.response.RuleListDto;
 import com.flow.assignment.rule.entity.Rule;
 import com.flow.assignment.rule.repository.RuleRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -32,8 +30,6 @@ public class RuleService {
     }
 
     public IpDto getUserIp() {
-
-        // TODO
         String ip = request.getHeader("X-Forwarded-For");
 
         if (ip == null || ip.isEmpty()) {
@@ -58,27 +54,18 @@ public class RuleService {
     }
 
     @Transactional(readOnly = true)
-    public RuleListDto getAllRules() {
+    public Page<RuleDto> getAllRules(Pageable pageable) {
+        Page<Rule> rulesPage = ruleRepository.findAll(pageable);
+        Page<RuleDto> ruleDtoPage = rulesPage.map(RuleDto::fromEntity);
 
-        // 리스트는 등록 시간 기준 내림차순으로 나열됩니다.
-        List<Rule> rulesList = ruleRepository.findAll(Sort.by(Sort.Direction.DESC, "createdTime"));
-
-        List<RuleDto> ruleDtoList = rulesList.stream()
-                .map(RuleDto::fromEntity)
-                .collect(Collectors.toList());
-
-        return new RuleListDto(ruleDtoList);
+        return ruleDtoPage;
     }
 
     @Transactional(readOnly = true)
-    public RuleListDto searchRules(String content) {
-        List<Rule> ruleList = ruleRepository.searchByContent(content); // IP 주소 또는 설명에 해당하는 내용이 있으면 반환합니다.
+    public Page<RuleDto> searchRules(String content, Pageable pageable) {
+        Page<Rule> rulesPage = ruleRepository.searchByContent(content, pageable);
 
-        List<RuleDto> ruleDtoList = ruleList.stream()
-                .map(RuleDto::fromEntity)
-                .collect(Collectors.toList());
-
-        return new RuleListDto(ruleDtoList);
+        return rulesPage.map(RuleDto::fromEntity);
     }
 
     @Transactional
@@ -89,14 +76,10 @@ public class RuleService {
         ruleRepository.delete(rule); // SOFT DELETE
     }
 
-    public RuleListDto searchRulesByPeriod(PeriodDto periodDto) {
-        List<Rule> ruleList = ruleRepository.findAllByStartTimeBetween(periodDto.getStartTime(), periodDto.getEndTime());
+    public Page<RuleDto> searchRulesByPeriod(PeriodDto periodDto, Pageable pageable) {
+        Page<Rule> rulesPage = ruleRepository.findAllByStartTimeBetween(periodDto.getStartTime(), periodDto.getEndTime(), pageable);
 
-        List<RuleDto> ruleDtoList = ruleList.stream()
-                .map(RuleDto::fromEntity)
-                .collect(Collectors.toList());
-
-        return new RuleListDto(ruleDtoList);
+        return rulesPage.map(RuleDto::fromEntity);
     }
 
 }

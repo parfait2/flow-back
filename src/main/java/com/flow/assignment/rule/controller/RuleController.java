@@ -3,12 +3,15 @@ package com.flow.assignment.rule.controller;
 import com.flow.assignment.rule.dto.request.PeriodDto;
 import com.flow.assignment.rule.dto.request.RequestRuleDto;
 import com.flow.assignment.rule.dto.response.IpDto;
+import com.flow.assignment.rule.dto.response.RuleDto;
 import com.flow.assignment.rule.service.RuleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,8 +63,8 @@ public class RuleController {
      * */
     @Operation(summary = "IP 규칙 전체 조회", description = "모든 등록된 규칙들이 리스트 형식으로 반환됩니다.")
     @GetMapping()
-    public ResponseEntity<?> getAllRules() {
-        return ResponseEntity.ok(ruleService.getAllRules());
+    public ResponseEntity<Page<RuleDto>> getAllRules(Pageable pageable) {
+        return ResponseEntity.ok(ruleService.getAllRules(pageable));
     }
 
     /**
@@ -73,8 +76,8 @@ public class RuleController {
      * */
     @Operation(summary = "내용 검색", description = "IP 추가 시 작성하는 내용을 기준으로 검색합니다.")
     @GetMapping("/search")
-    public ResponseEntity<?> searchRules(@RequestParam String content) {
-        return ResponseEntity.ok(ruleService.searchRules(content));
+    public ResponseEntity<Page<RuleDto>> searchRules(@RequestParam String content, Pageable pageable) {
+        return ResponseEntity.ok(ruleService.searchRules(content, pageable));
     }
 
     /**
@@ -100,8 +103,8 @@ public class RuleController {
      * */
     @Operation(summary = "기간 검색", description = "사용 시작 시간, 사용 끝 시간으로 검색합니다.")
     @PostMapping("/period")
-    public ResponseEntity<?> searchRulesByPeriod(@RequestBody PeriodDto periodDto) {
-        return ResponseEntity.ok(ruleService.searchRulesByPeriod(periodDto));
+    public ResponseEntity<Page<RuleDto>> searchRulesByPeriod(@RequestBody PeriodDto periodDto, Pageable pageable) {
+        return ResponseEntity.ok(ruleService.searchRulesByPeriod(periodDto, pageable));
     }
 
 }
