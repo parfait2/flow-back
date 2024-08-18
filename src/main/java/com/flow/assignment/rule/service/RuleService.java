@@ -11,7 +11,9 @@ import com.flow.assignment.rule.repository.RuleRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +57,13 @@ public class RuleService {
 
     @Transactional(readOnly = true)
     public Page<RuleDto> getAllRules(Pageable pageable) {
-        Page<Rule> rulesPage = ruleRepository.findAll(pageable);
+        Pageable sortedByCreatedAtDesc = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by("createdTime").descending()
+        );
+
+        Page<Rule> rulesPage = ruleRepository.findAll(sortedByCreatedAtDesc);
         Page<RuleDto> ruleDtoPage = rulesPage.map(RuleDto::fromEntity);
 
         return ruleDtoPage;
