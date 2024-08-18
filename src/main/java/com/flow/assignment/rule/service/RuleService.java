@@ -31,11 +31,24 @@ public class RuleService {
         this.request = request;
     }
 
+    public boolean isValidIp(String ip) {
+        String ipPattern =
+                "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+
+        return ip != null && ip.matches(ipPattern);
+    }
+
     public IpDto getUserIp() {
         String ip = request.getHeader("X-Forwarded-For");
 
-        if (ip == null || ip.isEmpty()) {
+        if (ip != null && !ip.isEmpty()) {
+            ip = ip.split(",")[0].trim(); // X-Forwarded-For 헤더가 여러 개의 IP 주소를 포함할 수 있습니다.
+        } else {
             ip = request.getRemoteAddr();
+        }
+
+        if (!isValidIp(ip)) {
+            throw new CustomException(ErrorCode.INVALID_IP_ADDRESS); // IP 주소 형식에 맞지 않으면 예외를 처리합니다.
         }
 
         return IpDto.builder()
