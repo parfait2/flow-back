@@ -35,8 +35,8 @@ public class DummyService {
                     UUID.randomUUID().toString(),
                     generateIpAddress(),
                     generateDescription(),
-                    LocalDateTime.now().minusDays(30).plusHours(i).withNano(0),
-                    LocalDateTime.now().plusDays(30).minusHours(i).withNano(0)
+                    LocalDateTime.now().minusDays(30).plusHours(i % 7).withNano(0),
+                    LocalDateTime.now().plusDays(30).minusHours(i % 7).withNano(0)
             };
             batchArgs.add(args);
 

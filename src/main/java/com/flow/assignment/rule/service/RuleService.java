@@ -117,10 +117,6 @@ public class RuleService {
 
         Page<Rule> rulesPage = ruleRepository.searchByContent(content, pageable);
 
-        if (rulesPage.isEmpty()) {
-            throw new CustomException(ErrorCode.NO_RULES_FOUND); // 검색어에 해당하는 결과가 없을 때 예외를 처리합니다.
-        }
-
         return rulesPage.map(RuleDto::fromEntity);
     }
 
@@ -146,10 +142,6 @@ public class RuleService {
         }
 
         Page<Rule> rulesPage = ruleRepository.findAllByStartTimeBetween(periodDto.getStartTime(), periodDto.getEndTime(), pageable);
-
-        if (rulesPage.isEmpty()) {
-            throw new CustomException(ErrorCode.NO_RULES_FOUND); // 검색어에 해당하는 결과가 없을 때 예외를 처리합니다.
-        }
 
         return rulesPage.map(RuleDto::fromEntity);
     }
