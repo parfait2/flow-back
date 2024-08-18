@@ -58,6 +58,15 @@ public class RuleService {
 
     @Transactional
     public UUID save(RequestRuleDto requestRuleDto) {
+
+        // 입력 값이 유효한 지 검증합니다.
+        if (requestRuleDto.getIpAddress() == null || !isValidIp(requestRuleDto.getIpAddress())) {
+            throw new CustomException(ErrorCode.INVALID_IP_ADDRESS); // IP 주소 형식에 맞지 않으면 예외를 처리합니다.
+        }
+        if (requestRuleDto.getStartTime().isAfter(requestRuleDto.getEndTime())) {
+            throw new CustomException(ErrorCode.INVALID_PERIOD); // 사용 허용 시작 시간보다 끝 시간이 이전에 있으면 예외를 처리합니다.
+        }
+
         Rule savedRule = ruleRepository.save(Rule.of(
                 requestRuleDto.getIpAddress(),
                 requestRuleDto.getDescription(),

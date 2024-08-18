@@ -10,7 +10,13 @@ import lombok.RequiredArgsConstructor;
 public enum ErrorCode {
 
 	NOT_FOUND_RULE(404, "N001", "존재하지 않는 규칙입니다."),
-	INVALID_IP_ADDRESS(400, "I001", "잘못된 IP 형식입니다.");
+	INVALID_IP_ADDRESS(400, "I001", "잘못된 IP 형식입니다."),
+	INVALID_PERIOD(400, "I002", "잘못된 기간 설정입니다.")
+
+
+
+
+	;
 
 	private int status;
 	private String code;
