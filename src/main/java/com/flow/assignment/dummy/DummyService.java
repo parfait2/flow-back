@@ -6,7 +6,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +35,8 @@ public class DummyService {
                     UUID.randomUUID().toString(),
                     generateIpAddress(),
                     generateDescription(),
-                    Timestamp.valueOf(LocalDateTime.now().minusDays(30).plusSeconds(i)),
-                    Timestamp.valueOf(LocalDateTime.now().plusDays(30).minusSeconds(i))
+                    LocalDateTime.now().minusDays(30).plusHours(i).withNano(0),
+                    LocalDateTime.now().plusDays(30).minusHours(i).withNano(0)
             };
             batchArgs.add(args);
 
