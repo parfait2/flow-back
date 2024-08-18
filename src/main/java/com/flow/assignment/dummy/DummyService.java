@@ -43,6 +43,13 @@ public class DummyService {
             if (i % 1000 == 0 && i > 0) {
                 jdbcTemplate.batchUpdate(sql, batchArgs);
                 batchArgs.clear();
+
+                // RDS 과부하 방지(각 배치 사이에 지연 시간 추가)
+                try {
+                    Thread.sleep(100);  // 0.1초 대기
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
 

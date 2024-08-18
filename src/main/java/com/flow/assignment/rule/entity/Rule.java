@@ -19,7 +19,7 @@ import java.util.UUID;
 @Getter
 @Table(name = "rule")
 @Entity
-@SQLDelete(sql = "UPDATE RULE SET IS_DELETED = TRUE WHERE ID = ?")
+@SQLDelete(sql = "UPDATE rule SET is_deleted = TRUE WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class Rule extends BaseEntity {
 
@@ -27,17 +27,22 @@ public class Rule extends BaseEntity {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(name = "id")
     private UUID id;
 
     @NotNull
+    @Column(name = "address")
     private String address; // IP 주소
 
+    @Column(name = "description")
     private String description; // 설명(최대 20자 입력 가능)
 
     @NotNull
+    @Column(name = "start_time")
     private LocalDateTime startTime; // 사용 허용 시작 시간
 
     @NotNull
+    @Column(name = "end_time")
     private LocalDateTime endTime; // 사용 허용 종료 시간
 
     @Builder
